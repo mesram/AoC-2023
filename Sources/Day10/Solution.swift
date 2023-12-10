@@ -49,7 +49,7 @@ func startPosition(_ input: [[Tile]]) -> (row: Int, column: Int) {
     fatalError()
 }
 
-func deriveStartTitle(position: (row: Int, column: Int), map: [[Tile]]) -> Tile {
+func deriveStartTile(position: (row: Int, column: Int), map: [[Tile]]) -> Tile {
     let top: Bool = position.row > 0 && map[position.row - 1][position.column].isConnectedToBottom
     let bottom: Bool = position.row < map.count - 1 && map[position.row + 1][position.column].isConnectedToTop
 
@@ -68,7 +68,7 @@ func deriveStartTitle(position: (row: Int, column: Int), map: [[Tile]]) -> Tile 
 func part1(_ input: [[Tile]]) -> Int {
     let start = startPosition(input)
     var map = input
-    map[start.row][start.column] = deriveStartTitle(position: start, map: input)
+    map[start.row][start.column] = deriveStartTile(position: start, map: input)
 
     var visited: Set<Coordinate> = Set()
     var queue: Set<Coordinate> = Set()
@@ -104,7 +104,7 @@ func part1(_ input: [[Tile]]) -> Int {
 func part2(_ input: [[Tile]]) -> Int {
     let start = startPosition(input)
     var map = input
-    map[start.row][start.column] = deriveStartTitle(position: start, map: input)
+    map[start.row][start.column] = deriveStartTile(position: start, map: input)
 
     var visited: Set<Coordinate> = Set()
     var queue: Set<Coordinate> = Set()
