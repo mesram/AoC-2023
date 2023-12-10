@@ -183,17 +183,10 @@ func part2(_ input: [[Tile]]) -> Int {
                 }
             }
 
-            partialVerticalCount = abs(partialVerticalCount)
-            verticalCount += partialVerticalCount / 2
-            partialVerticalCount = partialVerticalCount % 2
+            verticalCount += abs(partialVerticalCount) / 2
+            horizontalCount += abs(partialHorizontalCount) / 2
 
-            partialHorizontalCount = abs(partialHorizontalCount)
-            horizontalCount += partialHorizontalCount / 2
-            partialHorizontalCount = partialHorizontalCount % 2
-
-            if  horizontalCount % 2 == 1 || partialHorizontalCount != 0
-                || verticalCount % 2 == 1  || partialVerticalCount != 0 
-            {
+            if  !(horizontalCount.isMultiple(of: 2) && verticalCount.isMultiple(of: 2)) {
                 insideCount += 1
                 line.append("*")
             } else {
@@ -201,7 +194,7 @@ func part2(_ input: [[Tile]]) -> Int {
             }
         }
 
-        print("\(line)\n")
+        // print("\(line)\n")
     }
 
     return insideCount
