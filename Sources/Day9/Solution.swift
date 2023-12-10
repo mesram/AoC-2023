@@ -18,10 +18,6 @@ func part2(_ input: [[Int]]) -> Int {
     part1(input.map { $0.reversed() })
 }
 
-enum IteratioinCompleteError: Error {
-    case complete
-}
-
 func extrapolateValue(for values: [Int]) -> Int {
     // if array is all zeros (or empty), there's nothing left to extrapolate
     if values.filter({ $0 != 0 }).isEmpty {
