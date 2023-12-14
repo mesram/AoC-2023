@@ -3,32 +3,6 @@ import RegexBuilder
 print("Part 1: \(part1(Input.lines))")
 print("Part 2: \(part2(Input.lines))")
 
-enum Numbers: String {
-    case one
-    case two
-    case three
-    case four
-    case five
-    case six
-    case seven
-    case eight
-    case nine
-
-    var intValue: Int { get {
-        switch self {
-            case .one: return 1
-            case .two: return 2
-            case .three: return 3
-            case .four: return 4
-            case .five: return 5
-            case .six: return 6
-            case .seven: return 7
-            case .eight: return 8
-            case .nine: return 9
-        }
-    }}
-}
-
 func getMatch(
     _ input: [String], 
     forward: Regex<Regex<(Substring, Int)>.RegexOutput>,
@@ -63,13 +37,28 @@ func part1(_ input: [String]) -> Int {
 }
 
 func part2(_ input: [String]) -> Int {
+    func parseNumber(_ str: String) -> Int? {
+        return switch String(str) {
+            case "one": 1
+            case "two": 2
+            case "three": 3
+            case "four": 4
+            case "five": 5
+            case "six": 6
+            case "seven": 7
+            case "eight": 8
+            case "nine": 9
+            default: nil
+        }
+    }
+
     let forward = Regex {
         Capture {
             ChoiceOf {
                 CharacterClass.digit
                 "one"
                 "two"
-                "three" // khkhkjhjk
+                "three"
                 "four"
                 "five"
                 "six"
@@ -78,7 +67,7 @@ func part2(_ input: [String]) -> Int {
                 "nine"
             }
         } transform: {
-            Int($0) ?? Numbers(rawValue: String($0))?.intValue ?? 0
+            Int($0) ?? parseNumber(String($0)) ?? 0
         }
     }
 
@@ -97,7 +86,7 @@ func part2(_ input: [String]) -> Int {
                 "enin"
             }
         } transform: {
-            Int($0) ?? Numbers(rawValue: String($0.reversed()))?.intValue ?? 0
+            Int($0) ?? parseNumber(String($0.reversed())) ?? 0
         }
     }
 

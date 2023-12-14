@@ -30,41 +30,41 @@ enum Record: CustomDebugStringConvertible {
 
 var cache: [String: Int] = [:]
 
-func fastEval<C: Collection>(_ currentGroups: C, groups: some Collection<Int>, _ level: Int = 0) -> Int 
+func fastEval<C: Collection>(_ input: C, groups: some Collection<Int>, _ level: Int = 0) -> Int 
     where C.Element == Record, C.Index == Int
 {
-    let cacheIndex = currentGroups.map(\.debugDescription).joined() + "|" + groups.map(String.init).joined(separator: ",")
+    let cacheIndex = input.map(\.debugDescription).joined() + "|" + groups.map(String.init).joined(separator: ",")
 
     if let cacheHit = cache[cacheIndex] {
         return cacheHit
     }
 
     guard let groupWidth = groups.first else {
-        return currentGroups.contains(.required) ? 0 : 1
+        return input.contains(.required) ? 0 : 1
     }
 
     let minWidth = groups.reduce(0, +) + (groups.count - 1)
 
-    if (minWidth > currentGroups.count) {
+    if (minWidth > input.count) {
         return 0
     }
 
     var total = 0
 
-    for offset in 0..<(currentGroups.count - minWidth + 1) {
-        let startIndex = currentGroups.startIndex + offset
+    for offset in 0..<(input.count - minWidth + 1) {
+        let startIndex = input.startIndex + offset
         let endIndex = startIndex + groupWidth
 
-        if currentGroups[currentGroups.startIndex..<startIndex].contains(.required) {
+        if input[input.startIndex..<startIndex].contains(.required) {
             break
         }
-        if isValidOverlap(testGroup: currentGroups[startIndex..<endIndex]) {
+        if isValidOverlap(testGroup: input[startIndex..<endIndex]) {
             let shouldRecurse = groups.count == 1
-                ? !currentGroups[endIndex..<currentGroups.endIndex].contains(.required)
-                : currentGroups[endIndex] != .required
+                ? !input[endIndex..<input.endIndex].contains(.required)
+                : input[endIndex] != .required
             if shouldRecurse {
                 total += fastEval(
-                    currentGroups.dropFirst(groupWidth + offset + 1), 
+                    input.dropFirst(groupWidth + offset + 1), 
                     groups: groups.dropFirst(),
                     level + 1
                 )
@@ -102,15 +102,10 @@ func part1(_ input: [(String, [Int])]) -> Int {
 func part2(_ input: [(String, [Int])]) -> Int {
     input
         .map { line in 
-            var template = line.0
-            var groups: [Int] = line.1
-
-            for _ in 0..<4 {
-                template += "?" + line.0
-                groups += line.1
-            }
-
-            return (template, groups)
+            return (
+                repeatElement(line.0, count: 5).joined(separator: "?"),
+                repeatElement(line.1, count: 5).joined()
+            )
         }
         .map {
             let records = $0.0.split(separator: ".").joined(separator: ".").map {
